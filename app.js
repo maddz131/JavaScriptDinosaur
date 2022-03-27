@@ -17,12 +17,31 @@ fetch("dino.json", {
 .then(json => dinosArray = json.Dinos.map(dino => 
     new DinoObject(dino.species, dino.weight, dino.height, dino.fact, dino.diet, dino.when, dino.where)))  
 
+//create human object
+const form =  document.querySelector('#dino-compare');
+let humanObject = {
+    name: "",
+    feet: 0,
+    inches: 0,
+    weight: 0,
+    diet: ""
+}
+const getHumanData = function (human){
+    human.name = document.getElementById('name').value;
+    human.feet = document.getElementById('feet').value;
+    human.inches = document.getElementById('inches').value;
+    human.weight = document.getElementById('weight').value;
+    human.diet = document.getElementById('diet').value;
+    console.log(human);
+    return human;
+};
+
 //set the action for when the button on the form is clicked (aka display the grid)
 const grid = document.querySelector('#grid');
 
 const button = document.getElementById('btn');
 button.addEventListener('click', function () {
-    const form =  document.querySelector('.form-container');
+    humanObject = getHumanData(humanObject);
     form.remove();
     gridMaker();
 });
@@ -30,9 +49,19 @@ button.addEventListener('click', function () {
 //make the grid using the dinosArray
 function gridMaker(){
     for(let i = 0; i < dinosArray.length; i++){
-        const cell = document.createElement('div');
-        cell.className = "grid-item";
-        cell.innerHTML = dinosArray[i].species;
-        grid.append(cell);
+        if(i===Math.round(dinosArray.length/2)){
+            cellMaker(humanObject.name, "empty for now");
+        }
+        cellMaker(dinosArray[i].species, dinosArray[i].fact);
     };
+}
+
+function cellMaker(header, content){
+    let newHeader = document.createElement('h3');
+    newHeader.textContent = header;
+    const cell = document.createElement('div');
+    cell.className = "grid-item";
+    cell.innerHTML = content;
+    cell.append(newHeader);
+    grid.append(cell);
 }
