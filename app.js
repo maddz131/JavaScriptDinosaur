@@ -1,32 +1,38 @@
+//create Dinosaur Object
+function DinoObject(species, weight, height, fact, diet, when, where){
+    this.species = species;
+    this.weight = weight;
+    this.height = height;
+    this.fact = fact;
+    this.diet = diet;
+    this.when= when;
+    this.where = where;
+}
 
-    // Create Dino Constructor
+//fetcth the dino data from the json file, map each entry to a new DinoObject and store them in the array dinosArray
+fetch("dino.json", { 
+    mode: 'no-cors' // 'cors' by default
+})
+.then(response => response.json())
+.then(json => dinosArray = json.Dinos.map(dino => 
+    new DinoObject(dino.species, dino.weight, dino.height, dino.fact, dino.diet, dino.when, dino.where)))  
 
+//set the action for when the button on the form is clicked (aka display the grid)
+const grid = document.querySelector('#grid');
 
-    // Create Dino Objects
+const button = document.getElementById('btn');
+button.addEventListener('click', function () {
+    const form =  document.querySelector('.form-container');
+    form.remove();
+    gridMaker();
+});
 
-
-    // Create Human Object
-
-    // Use IIFE to get human data from form
-
-
-    // Create Dino Compare Method 1
-    // NOTE: Weight in JSON file is in lbs, height in inches. 
-
-    
-    // Create Dino Compare Method 2
-    // NOTE: Weight in JSON file is in lbs, height in inches.
-
-    
-    // Create Dino Compare Method 3
-    // NOTE: Weight in JSON file is in lbs, height in inches.
-
-
-    // Generate Tiles for each Dino in Array
-  
-        // Add tiles to DOM
-
-    // Remove form from screen
-
-
-// On button click, prepare and display infographic
+//make the grid using the dinosArray
+function gridMaker(){
+    for(let i = 0; i < dinosArray.length; i++){
+        const cell = document.createElement('div');
+        cell.className = "grid-item";
+        cell.innerHTML = dinosArray[i].species;
+        grid.append(cell);
+    };
+}
