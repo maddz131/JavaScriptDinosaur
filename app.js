@@ -56,12 +56,24 @@ function gridMaker(){
     };
 }
 
-function cellMaker(header, content){
-    let newHeader = document.createElement('h3');
-    newHeader.textContent = header;
+function cellMaker(title, content){
+    let getImage =  function(){
+        let image = new Image();
+        image.src =`./images/${title}.png`;
+        return image;
+    }();
+
     const cell = document.createElement('div');
     cell.className = "grid-item";
-    cell.innerHTML = content;
-    cell.append(newHeader);
+    
+    let header = document.createElement('h3');
+    header.textContent = title;
+    cell.append(header);
+
+    let fact = document.createElement('p');
+    fact.textContent = content;
+    cell.append(fact);
+
+    cell.append(getImage);
     grid.append(cell);
 }
