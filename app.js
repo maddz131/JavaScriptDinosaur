@@ -1,79 +1,123 @@
 //create Dinosaur Object
-function DinoObject(species, weight, height, fact, diet, when, where){
-    this.species = species;
-    this.weight = weight;
-    this.height = height;
-    this.fact = fact;
-    this.diet = diet;
-    this.when= when;
-    this.where = where;
+class DinoObject {
+    constructor(species, weight, height, fact, diet, when, where) {
+        this.species = species;
+        this.weight = weight;
+        this.height = height;
+        this.fact = fact;
+        this.diet = diet;
+        this.when = when;
+        this.where = where;
+        this.comparisons = [];
+        
+    }
+    
+    #compareWeight = function() {
+        if (this.weight > human.weight) {
+            this.comparisons.push(`${this.species} is ${this.weight - human.weight}lbs heavier than you!`);
+        } else {
+            this.comparisons.push(`You are ${human.weight - this.weight}lbs heavier than ${this.species}!`);
+        }
+    };
+
+    #compareHeight = function() {
+        if (this.height > human.feet) {
+            this.comparisons.push(`${this.species} is ${this.height - (human.feet)} feet taller than you!`);
+        } else {
+            this.comparisons.push(`You are taller than ${this.species} by ${this.height - human.height} feet.`);
+        }
+    }
+    #compareDiet = function() {
+        if (this.diet === human.diet) {
+            this.comparisons.push(`You and ${this.species} are both ${human.diet}s!`);
+        } else {
+            this.comparisons.push(`Your diet is different than ${this.species}.`);
+        }
+    };
+
+    addComparisons = function(){
+        this.#compareWeight();
+        this.#compareHeight();
+        this.#compareDiet();
+    };
+
+    getFact(){
+        let factNum = Math.floor(Math.random() * 10) % (this.comparisons.length);
+        if(this.species === 'Pigeon' || factNum === 0){
+            return this.fact
+        }
+        return(this.comparisons[factNum-1]);
+    }
+}
+
+//create human object
+let human = {
+    name: '',
+    feet: 0,
+    inches: 0,
+    weight: 0,
+    diet: '',
 }
 
 //fetcth the dino data from the json file, map each entry to a new DinoObject and store them in the array dinosArray
-fetch("dino.json", { 
+fetch('dino.json', { 
     mode: 'no-cors' // 'cors' by default
 })
 .then(response => response.json())
 .then(json => dinosArray = json.Dinos.map(dino => 
     new DinoObject(dino.species, dino.weight, dino.height, dino.fact, dino.diet, dino.when, dino.where)))  
 
-//create human object
 const form =  document.querySelector('#dino-compare');
-let humanObject = {
-    name: "",
-    feet: 0,
-    inches: 0,
-    weight: 0,
-    diet: ""
-}
-const getHumanData = function (human){
-    human.name = document.getElementById('name').value;
-    human.feet = document.getElementById('feet').value;
-    human.inches = document.getElementById('inches').value;
-    human.weight = document.getElementById('weight').value;
-    human.diet = document.getElementById('diet').value;
+
+//fill human object with form data
+const getHumantDataFromForm = function (){
+    for(let property in human){
+        if (human.hasOwnProperty(property)){
+            human[property] = document.getElementById(property).value;
+        }
+    }
+    human.species = 'human';
     console.log(human);
-    return human;
 };
 
-//set the action for when the button on the form is clicked (aka display the grid)
+const getImage =  function(fileName){
+    let image = new Image();
+    image.src =`./images/${fileName}.png`;
+    return image;
+};
+
 const grid = document.querySelector('#grid');
 
 const button = document.getElementById('btn');
+
+//create and display the grid when the button on the form is clicked
 button.addEventListener('click', function () {
-    humanObject = getHumanData(humanObject);
+    getHumantDataFromForm();
     form.remove();
-    gridMaker();
+    createGrid();
 });
 
 //make the grid using the dinosArray
-function gridMaker(){
+function createGrid(){
     for(let i = 0; i < dinosArray.length; i++){
-        if(i===Math.round(dinosArray.length/2)){
-            cellMaker(humanObject.name, "empty for now");
+        const species = dinosArray[i].species;
+        dinosArray[i].addComparisons();
+        if(i === Math.round(dinosArray.length/2)){
+            grid.append(creatCell(human.name, '', getImage(human.species)));
         }
-        cellMaker(dinosArray[i].species, dinosArray[i].fact);
+        grid.append(creatCell(species, dinosArray[i].getFact(), getImage(species)));
     };
 }
 
-function cellMaker(title, content){
-    let getImage =  function(){
-        let image = new Image();
-        image.src =`./images/${title}.png`;
-        return image;
-    }();
-
+function creatCell(title, content, image){
     const cell = document.createElement('div');
-    cell.className = "grid-item";
-    
+    cell.className = 'grid-item';
     let header = document.createElement('h3');
     header.textContent = title;
     cell.append(header);
-
     let fact = document.createElement('p');
     fact.textContent = content;
     cell.append(fact);
-
-    cell.append(getImage);
-    grid.append(cell);
+    cell.append(image);
+    return cell;
 }
