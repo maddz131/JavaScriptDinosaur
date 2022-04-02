@@ -9,7 +9,6 @@ class DinoObject {
         this.when = when;
         this.where = where;
         this.comparisons = [];
-        
     }
     
     #compareWeight = function() {
