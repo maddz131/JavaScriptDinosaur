@@ -85,20 +85,9 @@ const getImage =  function(fileName){
     return image;
 };
 
-const grid = document.querySelector('#grid');
-
 
 //make the grid using the dinosArray
-function createGrid(){
-    for(let i = 0; i < dinosArray.length; i++){
-        const species = dinosArray[i].species;
-        dinosArray[i].addComparisons();
-        if(i === Math.round(dinosArray.length/2)){
-            grid.append(creatCell(human.name, '', getImage(human.species)));
-        }
-        grid.append(creatCell(species, dinosArray[i].getFact(), getImage(species)));
-    };
-}
+const grid = document.querySelector('#grid');
 
 function creatCell(title, content, image){
     const cell = document.createElement('div');
@@ -111,6 +100,17 @@ function creatCell(title, content, image){
     cell.append(fact);
     cell.append(image);
     return cell;
+}
+
+function createGrid(){
+    for(let i = 0; i < dinosArray.length; i++){
+        const species = dinosArray[i].species;
+        dinosArray[i].addComparisons();
+        if(i === Math.round(dinosArray.length/2)){
+            grid.append(creatCell(human.name, '', getImage(human.species)));
+        }
+        grid.append(creatCell(species, dinosArray[i].getFact(), getImage(species)));
+    };
 }
 
 const button = document.getElementById('btn');
