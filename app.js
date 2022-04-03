@@ -1,5 +1,5 @@
 //create Dinosaur Object
-class DinoObject {
+class Dino {
     constructor(species, weight, height, fact, diet, when, where) {
         this.species = species;
         this.weight = weight;
@@ -58,25 +58,25 @@ let human = {
     diet: '',
 }
 
-//fetcth the dino data from the json file, map each entry to a new DinoObject and store them in the array dinosArray
+//fetcth the dino data from the json file, map each entry to a new Dino and store them in the array dinosArray
 fetch('dino.json', { 
     mode: 'no-cors' // 'cors' by default
 })
 .then(response => response.json())
 .then(json => dinosArray = json.Dinos.map(dino => 
-    new DinoObject(dino.species, dino.weight, dino.height, dino.fact, dino.diet, dino.when, dino.where)))  
+    new Dino(dino.species, dino.weight, dino.height, dino.fact, dino.diet, dino.when, dino.where)))  
 
 const form =  document.querySelector('#dino-compare');
+const formData = new FormData(form);
 
 //fill human object with form data
 const getHumantDataFromForm = function (){
     for(let property in human){
         if (human.hasOwnProperty(property)){
-            human[property] = document.getElementById(property).value;
+            human[property] = formData.get(property);
         }
     }
     human.species = 'human';
-    console.log(human);
 };
 
 const getImage =  function(fileName){
@@ -87,14 +87,6 @@ const getImage =  function(fileName){
 
 const grid = document.querySelector('#grid');
 
-const button = document.getElementById('btn');
-
-//create and display the grid when the button on the form is clicked
-button.addEventListener('click', function () {
-    getHumantDataFromForm();
-    form.remove();
-    createGrid();
-});
 
 //make the grid using the dinosArray
 function createGrid(){
@@ -120,3 +112,12 @@ function creatCell(title, content, image){
     cell.append(image);
     return cell;
 }
+
+const button = document.getElementById('btn');
+
+//remove the form and create the grid when the button on the form is clicked
+button.addEventListener('click', function () {
+    getHumantDataFromForm();
+    form.remove();
+    createGrid();
+});
