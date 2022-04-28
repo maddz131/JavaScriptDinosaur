@@ -1,8 +1,6 @@
 # Object Oriented Javascript 
 
-## Student Instructions
-
-### Big Picture
+## Dinosaur Infograph
 
 As a part of the Udacity Intermediate Javascript Nanodegree course I built an infographic derived from data that was provided, as well as user input data. I pulled in information from a form and used it to complete an array of objects that will then be appended back to the DOM. 
 
